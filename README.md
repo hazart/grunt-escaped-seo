@@ -17,6 +17,10 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-escaped-seo');
 ```
 
+This plugin require a local installation of PhantomJS (phantomjs.org/‎)
+
+And the npm "phantom" module `~0.5.4`
+
 ## The "escaped_seo" task
 
 ### Overview
@@ -24,7 +28,7 @@ Thank you to Mathieu Desvé (https://github.com/mazerte) who brought the idea an
 
 Use this plugin to generate a static version of your "single page application" boosted with ajax. This version will be parsed by the googlebot. The generated sitemap.xml will help you to tell google to index your site.
 
-To work with googlebot you need follow the google specifications (https://developers.google.com/webmasters/ajax-crawling/docs/specification). Use #! hash fragment in your urls or add a meta in your page :
+To work with googlebot you need follow the google specifications (https://developers.google.com/webmasters/ajax-crawling/docs/specification). Use #! hash fragment in your urls or add a meta in your html page:
 ```html
 <meta name="fragment" content="!">
 ```
