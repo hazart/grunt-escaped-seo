@@ -48,7 +48,7 @@ In your project's Gruntfile, add a section named `escaped_seo` to the data objec
 
 ```js
 grunt.initConfig({
-  escaped_seo: {
+  'escaped-seo': {
     options: {
       domain: 'http://yourdomain.com',
       server: '',
@@ -96,7 +96,7 @@ A local folder into which ths static html files will be created.
 
 #### options.changefreq
 Type: `String`
-Default value: `Daily`
+Default value: `daily`
 
 The changefreq value to use in the sitemap.xml
 
@@ -110,7 +110,7 @@ You can define in this object some replace rules for the static html versions. E
 ### Usage Examples
 
 ```coffee
-escaped_seo:
+'escaped-seo':
   options:
     domain: 'http://pr0d.fr'
     server: 'http://localhost:9001'

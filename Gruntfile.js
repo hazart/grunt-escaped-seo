@@ -42,10 +42,10 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    escaped_seo: {
+    'escaped-seo': {
       dist: {
         options: {
-          domain: 'http://test.pr0d.fr',
+          domain: 'http://test.pr0d.fr',  
           server: 'http://localhost:9001'
         },
       },
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'escaped_seo']);
+  grunt.registerTask('test', ['clean', 'escaped-seo']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['coffee', 'watch:coffee']);
