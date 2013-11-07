@@ -1,6 +1,6 @@
 (function() {
   module.exports = function(grunt) {
-    return grunt.registerMultiTask('escaped_seo', 'Generate an SEO website and sitemap for google escaped fragments', function() {
+    return grunt.registerMultiTask('escaped-seo', 'Generate an SEO website and sitemap for google escaped fragments', function() {
       var createPage, done, generateSitemap, initPhantom, options, page, ph, phantom, processPage, processQueue, queue, url, urls, _i, _len;
       options = this.options({
         domain: 'http://localhost',
