@@ -9,7 +9,7 @@ module.exports = (grunt) ->
 	grunt.registerMultiTask 'escaped_seo', 'Generate an SEO website and sitemap for google escaped fragments', ->
 
 		options = this.options
-			domain: 'http://localhost/'
+			domain: 'http://localhost'
 			server: ''
 			delay: 2000
 			public: 'dist'

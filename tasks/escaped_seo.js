@@ -3,7 +3,7 @@
     return grunt.registerMultiTask('escaped_seo', 'Generate an SEO website and sitemap for google escaped fragments', function() {
       var createPage, done, generateSitemap, initPhantom, options, page, ph, phantom, processPage, processQueue, queue, url, urls, _i, _len;
       options = this.options({
-        domain: 'http://localhost/',
+        domain: 'http://localhost',
         server: '',
         delay: 2000,
         "public": 'dist',

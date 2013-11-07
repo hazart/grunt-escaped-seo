@@ -45,19 +45,10 @@ module.exports = function(grunt) {
     escaped_seo: {
       dist: {
         options: {
-        },
-        urls: {
+          domain: 'http://test.pr0d.fr',
+          server: 'http://localhost:9001'
         },
       },
-      // custom_options: {
-      //   options: {
-      //     separator: ': ',
-      //     punctuation: ' !!!',
-      //   },
-      //   files: {
-      //     'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-      //   },
-      // },
     },
 
   });
