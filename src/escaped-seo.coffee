@@ -105,7 +105,8 @@ module.exports = (grunt) ->
 			xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n'
 			xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 			for url in urls
-				priority = 1 - url.split("/").length/10
+				priority = 1
+				priority -= url.split("/").length/10 if url.length > 1
 				xmlStr += '  <url>\n'
 				xmlStr += "    <loc>"+options.domain+url+"</loc>\n"
 				xmlStr += "    <lastmod>"+time+"</lastmod>\n"

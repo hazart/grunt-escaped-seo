@@ -124,7 +124,10 @@
         xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
         for (_j = 0, _len1 = urls.length; _j < _len1; _j++) {
           url = urls[_j];
-          priority = 1 - url.split("/").length / 10;
+          priority = 1;
+          if (url.length > 1) {
+            priority -= url.split("/").length / 10;
+          }
           xmlStr += '  <url>\n';
           xmlStr += "    <loc>" + options.domain + url + "</loc>\n";
           xmlStr += "    <lastmod>" + time + "</lastmod>\n";

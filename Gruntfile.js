@@ -46,7 +46,8 @@ module.exports = function(grunt) {
       dist: {
         options: {
           domain: 'http://test.pr0d.fr',  
-          server: 'http://localhost:9001'
+          server: 'http://localhost:9001',
+          public: '.tmp'
         },
       },
     },
