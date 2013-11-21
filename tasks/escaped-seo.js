@@ -73,13 +73,14 @@
         return this.page.evaluate((function() {
           return document.documentElement.outerHTML;
         }), function(result) {
-          var content, destFile, k, match, path, pattern, u, v, _ref;
+          var content, destFile, domain, k, match, path, pattern, u, v, _ref;
           content = result;
           pattern = /[#!]([\w\/\-_]*)/g;
           match = pattern.exec(url);
           destFile = match ? match[1] : "";
           pattern = /(<head[\w-="' ]*>)/gi;
-          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + options.domain + "/" + url + '"; </script>');
+          domain = options.domain.indexOf('http://') !== -1 ? options.domain : 'http://' + options.domain;
+          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + domain + "/" + url + '"; </script>');
           _ref = options.replace;
           for (k in _ref) {
             v = _ref[k];

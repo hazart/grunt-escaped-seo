@@ -70,7 +70,8 @@ module.exports = (grunt) ->
 				destFile = if match then match[1] else ""
 				
 				pattern = /(<head[\w-="' ]*>)/gi
-				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + options.domain + "/"+url + '"; </script>')
+				domain = if options.domain.indexOf('http://') isnt -1 then options.domain else 'http://' + options.domain
+				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + domain + "/"+url + '"; </script>')
 
 				content = content.replace(v, k) for k, v of options.replace
 

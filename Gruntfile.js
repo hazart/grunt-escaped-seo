@@ -45,7 +45,7 @@ module.exports = function(grunt) {
     'escaped-seo': {
       dist: {
         options: {
-          domain: 'http://test.pr0d.fr',  
+          domain: 'test.pr0d.fr',  
           server: 'http://localhost:9001',
           public: '.tmp'
         },
