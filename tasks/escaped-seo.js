@@ -1,4 +1,8 @@
 (function() {
+  var path;
+
+  path = require('path');
+
   module.exports = function(grunt) {
     return grunt.registerMultiTask('escaped-seo', 'Generate an SEO website and sitemap for google escaped fragments', function() {
       var createPage, done, generateSitemap, initPhantom, options, page, ph, phantom, processPage, processQueue, queue, url, urls, _i, _len;
@@ -62,9 +66,10 @@
           });
           this.page.set('onUrlChanged', function(url) {
             var _this = this;
-            return setTimeout(function() {
+            setTimeout(function() {
               return processPage();
             }, options.delay);
+            return this.page.set('onUrlChanged', null);
           });
           return this.page.open(url, function(status) {});
         });
@@ -73,14 +78,16 @@
         return this.page.evaluate((function() {
           return document.documentElement.outerHTML;
         }), function(result) {
-          var content, destFile, domain, k, match, path, pattern, u, v, _ref;
+          var content, destFile, domain, k, match, pattern, pf, u, v, _ref;
           content = result;
-          pattern = /[#!]([\w\/\-_]*)/g;
+          pattern = /[#!/]*([\w\/\-_]*)/g;
           match = pattern.exec(url);
           destFile = match ? match[1] : "";
           pattern = /(<head[\w-="' ]*>)/gi;
-          domain = options.domain.indexOf('http://') !== -1 ? options.domain : 'http://' + options.domain;
-          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + domain + "/" + url + '"; </script>');
+          domain = options.domain.indexOf('://') !== -1 ? options.domain : 'http://' + options.domain;
+          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + path.join(domain, url) + '"; </script>');
+          pattern = /(<meta name="fragment" content="!">)/gi;
+          content = content.replace(pattern, '');
           _ref = options.replace;
           for (k in _ref) {
             v = _ref[k];
@@ -89,12 +96,12 @@
           if (destFile.length <= 1) {
             destFile = 'index';
           }
-          path = "./" + options["public"] + "/" + options.folder + "/" + destFile + ".html";
-          grunt.file.write(path, content);
+          pf = path.join("./", options["public"], options.folder, destFile + ".html");
+          grunt.file.write(pf, content);
           pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g;
           while ((match = pattern.exec(content))) {
             u = match[1];
-            if (queue[u] === void 0 && u !== "#" && u !== "/" && u !== "#/") {
+            if (queue[u] === void 0 && (u !== "#" && u !== "/" && u !== "#/")) {
               grunt.log.writeln('add link: '.yellow + u);
               urls.push(u);
               queue[u] = 0;
@@ -109,7 +116,7 @@
         for (url in queue) {
           if (queue[url] === 0) {
             queue[url] = 1;
-            href = options.server + url;
+            href = path.join(options.server, url);
             grunt.log.writeln('process: '.green + href);
             createPage(href);
             return;
@@ -119,27 +126,28 @@
         return generateSitemap();
       };
       generateSitemap = function() {
-        var path, priority, time, xmlStr, _j, _len1;
+        var pf, priority, time, u, xmlStr, _j, _len1;
         time = new Date().toISOString();
         xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n';
         xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
         for (_j = 0, _len1 = urls.length; _j < _len1; _j++) {
           url = urls[_j];
+          u = path.join(options.domain, url);
           priority = 1;
-          if (url.length > 1) {
-            priority -= url.split("/").length / 10;
+          if (u.length > 1) {
+            priority -= (u.split("/").length - 1) / 10;
           }
           xmlStr += '  <url>\n';
-          xmlStr += "    <loc>" + options.domain + url + "</loc>\n";
+          xmlStr += "    <loc>" + u + "</loc>\n";
           xmlStr += "    <lastmod>" + time + "</lastmod>\n";
           xmlStr += "    <changefreq>" + options.changefreq + "</changefreq>\n";
           xmlStr += "    <priority>" + priority + "</priority>\n";
           xmlStr += "  </url>\n";
         }
         xmlStr += '</urlset>';
-        path = options["public"] + "/sitemap.xml";
-        grunt.file.write(path, xmlStr);
-        grunt.log.writeln('File "'.yellow + path + '" created.'.yellow);
+        pf = path.join(options["public"], "/sitemap.xml");
+        grunt.file.write(pf, xmlStr);
+        grunt.log.writeln('File "'.yellow + pf + '" created.'.yellow);
         return done();
       };
       return initPhantom();

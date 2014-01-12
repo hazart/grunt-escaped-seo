@@ -44,21 +44,28 @@ Don't forget to add a redirect rule. In Exemple for htaccess with apache server 
 </ifModule>
 ```
 
+And if you are using pushstate.
+
+```html
+<ifModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (Googlebot|bingbot|Googlebot-Mobile|Baiduspider|Yahoo|YahooSeeker|DoCoMo|Twitterbot|TweetmemeBot|Twikle|Netseer|Daumoa|SeznamBot|Ezooms|MSNBot|Exabot|MJ12bot|sogou\sspider|YandexBot|bitlybot|ia_archiver|proximic|spbot|ChangeDetection|NaverBot|MetaJobBot|magpie-crawler|Genieo\sWeb\sfilter|Qualidator.com\sBot|Woko|Vagabondo|360Spider|ExB\sLanguage\sCrawler|AddThis.com|aiHitBot|Spinn3r|BingPreview|GrapeshotCrawler|CareerBot|ZumBot|ShopWiki|bixocrawler|uMBot|sistrix|linkdexbot|AhrefsBot|archive.org_bot|SeoCheckBot|TurnitinBot|VoilaBot|SearchmetricsBot|Butterfly|Yahoo!|Plukkie|yacybot|trendictionbot|UASlinkChecker|Blekkobot|Wotbox|YioopBot|meanpathbot|TinEye|LuminateBot|FyberSpider|Infohelfer|linkdex.com|Curious\sGeorge|Fetch-Guess|ichiro|MojeekBot|SBSearch|WebThumbnail|socialbm_bot|SemrushBot|Vedma|alexa\ssite\saudit|SEOkicks-Robot|Browsershots|BLEXBot|woriobot|AMZNKAssocBot|Speedy|oBot|HostTracker|OpenWebSpider|WBSearchBot|FacebookExternalHit) [NC]
+    RewriteRule ^$ /seo/index.html [QSA,L]
+
+    RewriteCond %{HTTP_USER_AGENT} (Googlebot|bingbot|Googlebot-Mobile|Baiduspider|Yahoo|YahooSeeker|DoCoMo|Twitterbot|TweetmemeBot|Twikle|Netseer|Daumoa|SeznamBot|Ezooms|MSNBot|Exabot|MJ12bot|sogou\sspider|YandexBot|bitlybot|ia_archiver|proximic|spbot|ChangeDetection|NaverBot|MetaJobBot|magpie-crawler|Genieo\sWeb\sfilter|Qualidator.com\sBot|Woko|Vagabondo|360Spider|ExB\sLanguage\sCrawler|AddThis.com|aiHitBot|Spinn3r|BingPreview|GrapeshotCrawler|CareerBot|ZumBot|ShopWiki|bixocrawler|uMBot|sistrix|linkdexbot|AhrefsBot|archive.org_bot|SeoCheckBot|TurnitinBot|VoilaBot|SearchmetricsBot|Butterfly|Yahoo!|Plukkie|yacybot|trendictionbot|UASlinkChecker|Blekkobot|Wotbox|YioopBot|meanpathbot|TinEye|LuminateBot|FyberSpider|Infohelfer|linkdex.com|Curious\sGeorge|Fetch-Guess|ichiro|MojeekBot|SBSearch|WebThumbnail|socialbm_bot|SemrushBot|Vedma|alexa\ssite\saudit|SEOkicks-Robot|Browsershots|BLEXBot|woriobot|AMZNKAssocBot|Speedy|oBot|HostTracker|OpenWebSpider|WBSearchBot|FacebookExternalHit) [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d    
+    RewriteCond %{REQUEST_FILENAME} !\.(.*)
+    RewriteRule ^[#!/]*([\w\/\-_]*)$ /seo/$1.html [QSA,L]
+</ifModule>
+```
+
 In your project's Gruntfile, add a section named `escaped_seo` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
   'escaped-seo': {
     options: {
-      domain: 'http://yourdomain.com',
-      server: '',
-      delay: 2000,
-      public: 'dist',
-      folder: 'seo',
-      changefreq: 'daily',
-      replace: {
-        "new text": /(old text)/gi
-      }
+      domain: 'http://yourdomain.com'
     },
   },
 })
@@ -73,6 +80,7 @@ The final domain of your site, used for the sitemap.xml
 
 #### options.server
 Type: `String`
+Default value: options.domain
 
 The server to parse to generate the static version and the site tree. By default options.domain is used
 
@@ -92,7 +100,7 @@ Your local current folder corresponding to the public document root folder. The 
 Type: `String`
 Default value: `seo`
 
-A local folder into which ths static html files will be created.
+A local folder into which this static html files will be created.
 
 #### options.changefreq
 Type: `String`
@@ -126,4 +134,4 @@ You can define in this object some replace rules for the static html versions. E
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
-_(Nothing yet)_
+0.2.0   Pushstate compatibility added

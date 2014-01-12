@@ -38,15 +38,14 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp'],
+      tests: ['.tmp'],
     },
 
     // Configuration to be run (and then tested).
     'escaped-seo': {
       dist: {
         options: {
-          domain: 'test.pr0d.fr',  
-          server: 'http://localhost:9001',
+          domain: 'http://yoursite.com',
           public: '.tmp'
         },
       },

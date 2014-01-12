@@ -1,11 +1,11 @@
 {
   "name": "grunt-escaped-seo",
   "description": "Generate an SEO website and sitemap for google escaped fragments",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "homepage": "https://github.com/hazart/grunt-escaped-seo",
   "author": {
     "name": "Alex Koch",
-    "email": "alexandre.koch@pr0d.fr"
+    "email": "alex@pr0d.fr"
   },
   "repository": {
     "type": "git",
@@ -28,14 +28,15 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-coffee": "~0.6.0",
-    "grunt-contrib-watch": "~0.5.1",
-    "grunt": "~0.4.1",
+    "path": "~0.4.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "~0.8.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.2",
     "phantom": "~0.5.4"
   },
   "peerDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "~0.4.2",
     "phantom": "~0.5.4"
   },
   "keywords": [
@@ -46,6 +47,7 @@
     "sitemap",
     "phantom",
     "seo",
+    "pushstate",
     "ajax"
   ]
 }

@@ -3,6 +3,7 @@
 # 
 # Copyright (c) 2013 Alex Koch
 # Licensed under the MIT license.
+path = require('path')
 
 module.exports = (grunt) ->
 
@@ -60,29 +61,33 @@ module.exports = (grunt) ->
 							processPage()
 						options.delay
 					)
+					@page.set 'onUrlChanged', null
 				@page.open url, (status) ->
 			
 		processPage = () ->
 			@page.evaluate (-> document.documentElement.outerHTML), (result) ->
 				content = result
-				pattern = /[#!]([\w\/\-_]*)/g
+				pattern = /[#!/]*([\w\/\-_]*)/g
 				match = pattern.exec(url)
 				destFile = if match then match[1] else ""
 				
 				pattern = /(<head[\w-="' ]*>)/gi
-				domain = if options.domain.indexOf('http://') isnt -1 then options.domain else 'http://' + options.domain
-				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + domain + "/"+url + '"; </script>')
+				domain = if options.domain.indexOf('://') isnt -1 then options.domain else 'http://' + options.domain
+				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + path.join(domain,url) + '"; </script>')
+
+				pattern = /(<meta name="fragment" content="!">)/gi
+				content = content.replace(pattern, '')
 
 				content = content.replace(v, k) for k, v of options.replace
 
 				destFile = 'index' if destFile.length <= 1
-				path = "./" + options.public + "/"+ options.folder + "/" + destFile + ".html"
-				grunt.file.write(path, content);
+				pf = path.join("./", options.public, options.folder, destFile + ".html")
+				grunt.file.write(pf, content);
 				
 				pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g
 				while (match = pattern.exec(content))
 					u = match[1]
-					if( queue[u] is undefined and u isnt "#" and u isnt "/" and u isnt "#/")
+					if queue[u] is undefined and (u isnt "#" and u isnt "/" and u isnt "#/")
 						grunt.log.writeln('add link: '.yellow + u)
 						urls.push(u)
 						queue[u] = 0
@@ -94,7 +99,7 @@ module.exports = (grunt) ->
 			for url of queue
 				if queue[url] is 0
 					queue[url] = 1
-					href = options.server + url
+					href = path.join(options.server, url)
 					grunt.log.writeln('process: '.green + href)
 					createPage(href)
 					return
@@ -106,19 +111,20 @@ module.exports = (grunt) ->
 			xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n'
 			xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 			for url in urls
+				u = path.join(options.domain, url)
 				priority = 1
-				priority -= url.split("/").length/10 if url.length > 1
+				priority -= (u.split("/").length-1)/10 if u.length > 1
 				xmlStr += '  <url>\n'
-				xmlStr += "    <loc>"+options.domain+url+"</loc>\n"
+				xmlStr += "    <loc>"+u+"</loc>\n"
 				xmlStr += "    <lastmod>"+time+"</lastmod>\n"
 				xmlStr += "    <changefreq>"+options.changefreq+"</changefreq>\n"
 				xmlStr += "    <priority>"+priority+"</priority>\n"
 				xmlStr += "  </url>\n"
 			xmlStr += '</urlset>'
 
-			path = options.public + "/sitemap.xml"
-			grunt.file.write(path, xmlStr);	
-			grunt.log.writeln('File "'.yellow + path + '" created.'.yellow)
+			pf = path.join(options.public, "/sitemap.xml")
+			grunt.file.write(pf, xmlStr);	
+			grunt.log.writeln('File "'.yellow + pf + '" created.'.yellow)
 			done()
 
 		initPhantom()
