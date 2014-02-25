@@ -111,7 +111,7 @@ module.exports = (grunt) ->
 			xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n'
 			xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 			for url in urls
-				u = path.join(options.domain, url)
+				u = require('url').resolve(options.domain, url)
 				priority = 1
 				priority -= (u.split("/").length-1)/10 if u.length > 1
 				xmlStr += '  <url>\n'

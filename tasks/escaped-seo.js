@@ -132,7 +132,7 @@
         xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
         for (_j = 0, _len1 = urls.length; _j < _len1; _j++) {
           url = urls[_j];
-          u = path.join(options.domain, url);
+          u = require('url').resolve(options.domain, url);
           priority = 1;
           if (u.length > 1) {
             priority -= (u.split("/").length - 1) / 10;
