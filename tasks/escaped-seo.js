@@ -85,7 +85,7 @@
           destFile = match ? match[1] : "";
           pattern = /(<head[\w-="' ]*>)/gi;
           domain = options.domain.indexOf('://') !== -1 ? options.domain : 'http://' + options.domain;
-          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + path.join(domain, url) + '"; </script>');
+          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain, url) + '"; </script>');
           pattern = /(<meta name="fragment" content="!">)/gi;
           content = content.replace(pattern, '');
           _ref = options.replace;

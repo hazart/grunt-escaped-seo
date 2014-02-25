@@ -73,7 +73,7 @@ module.exports = (grunt) ->
 				
 				pattern = /(<head[\w-="' ]*>)/gi
 				domain = if options.domain.indexOf('://') isnt -1 then options.domain else 'http://' + options.domain
-				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + path.join(domain,url) + '"; </script>')
+				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain,url) + '"; </script>')
 
 				pattern = /(<meta name="fragment" content="!">)/gi
 				content = content.replace(pattern, '')

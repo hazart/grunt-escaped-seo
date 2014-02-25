@@ -126,12 +126,14 @@ You can define in this object some replace rules for the static html versions. E
     folder: 'seo'
     changefreq: 'daily'
     delay: 2000
-    replace:
-      "test": /(<meta[\w-="' ]*>)/gi
+    replace: {
+      'contact@domain.com': /[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]*/gi
+    }
 ```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+0.3.0   Bug correction with redirection
 0.2.0   Pushstate compatibility added
