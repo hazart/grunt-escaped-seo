@@ -135,6 +135,7 @@ You can define in this object some replace rules for the static html versions. E
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+0.4.0   Add the protocol inside the sitemap loc
 0.3.1   Bug correction with sitemap domain
 0.3.0   Bug correction with redirection domain
 0.2.0   Pushstate compatibility added

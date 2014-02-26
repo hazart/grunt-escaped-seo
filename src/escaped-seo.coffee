@@ -110,8 +110,9 @@ module.exports = (grunt) ->
 			time = new Date().toISOString()
 			xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n'
 			xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+			domain = if options.domain.indexOf('://') isnt -1 then options.domain else 'http://' + options.domain
 			for url in urls
-				u = require('url').resolve(options.domain, url)
+				u = require('url').resolve(domain, url)
 				priority = 1
 				priority -= (u.split("/").length-1)/10 if u.length > 1
 				xmlStr += '  <url>\n'

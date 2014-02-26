@@ -126,13 +126,14 @@
         return generateSitemap();
       };
       generateSitemap = function() {
-        var pf, priority, time, u, xmlStr, _j, _len1;
+        var domain, pf, priority, time, u, xmlStr, _j, _len1;
         time = new Date().toISOString();
         xmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n';
         xmlStr += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        domain = options.domain.indexOf('://') !== -1 ? options.domain : 'http://' + options.domain;
         for (_j = 0, _len1 = urls.length; _j < _len1; _j++) {
           url = urls[_j];
-          u = require('url').resolve(options.domain, url);
+          u = require('url').resolve(domain, url);
           priority = 1;
           if (u.length > 1) {
             priority -= (u.split("/").length - 1) / 10;
