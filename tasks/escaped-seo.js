@@ -1,7 +1,9 @@
 (function() {
-  var path;
+  var env, path;
 
   path = require('path');
+
+  env = require('jsdom').env;
 
   module.exports = function(grunt) {
     return grunt.registerMultiTask('escaped-seo', 'Generate an SEO website and sitemap for google escaped fragments', function() {
@@ -65,10 +67,11 @@
             return console.error(msgStack.join('\n'));
           });
           this.page.set('onUrlChanged', function(url) {
-            var _this = this;
-            setTimeout(function() {
-              return processPage();
-            }, options.delay);
+            setTimeout((function(_this) {
+              return function() {
+                return processPage();
+              };
+            })(this), options.delay);
             return this.page.set('onUrlChanged', null);
           });
           return this.page.open(url, function(status) {});
@@ -78,37 +81,46 @@
         return this.page.evaluate((function() {
           return document.documentElement.outerHTML;
         }), function(result) {
-          var content, destFile, domain, k, match, pattern, pf, u, v, _ref;
-          content = result;
-          pattern = /[#!/]*([\w\/\-_]*)/g;
-          match = pattern.exec(url);
-          destFile = match ? match[1] : "";
-          pattern = /(<head[\w-="' ]*>)/gi;
-          domain = options.domain.indexOf('://') !== -1 ? options.domain : 'http://' + options.domain;
-          content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain, url) + '"; </script>');
-          pattern = /(<meta name="fragment" content="!">)/gi;
-          content = content.replace(pattern, '');
-          _ref = options.replace;
-          for (k in _ref) {
-            v = _ref[k];
-            content = content.replace(v, k);
-          }
-          if (destFile.length <= 1) {
-            destFile = 'index';
-          }
-          pf = path.join("./", options["public"], options.folder, destFile + ".html");
-          grunt.file.write(pf, content);
-          pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g;
-          while ((match = pattern.exec(content))) {
-            u = match[1];
-            if (queue[u] === void 0 && (u !== "#" && u !== "/" && u !== "#/")) {
-              grunt.log.writeln('add link: '.yellow + u);
-              urls.push(u);
-              queue[u] = 0;
-            }
-          }
-          this.page.close();
-          return processQueue();
+          return env(result, (function(_this) {
+            return function(errors, window) {
+              var $, content, destFile, domain, k, match, pattern, pf, u, v, _ref;
+              if (errors) {
+                console.log("ALERT>".red, console.log(errors));
+              }
+              $ = require('jquery')(window);
+              $('.nofollow').remove();
+              content = $('html')[0].outerHTML;
+              pattern = /[#!/]*([\w\/\-_]*)/g;
+              match = pattern.exec(url);
+              destFile = match ? match[1] : "";
+              pattern = /(<head[\w-="' ]*>)/gi;
+              domain = options.domain.indexOf('://') !== -1 ? options.domain : 'http://' + options.domain;
+              content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain, url) + '"; </script>');
+              pattern = /(<meta name="fragment" content="!">)/gi;
+              content = content.replace(pattern, '');
+              _ref = options.replace;
+              for (k in _ref) {
+                v = _ref[k];
+                content = content.replace(v, k);
+              }
+              if (destFile.split('/')[destFile.split('/').length - 1].length <= 1) {
+                destFile += 'index';
+              }
+              pf = path.join("./", options["public"], options.folder, destFile + ".html");
+              grunt.file.write(pf, content);
+              pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g;
+              while ((match = pattern.exec(content))) {
+                u = match[1];
+                if (queue[u] === void 0 && (u !== "#" && u !== "/" && u !== "#/")) {
+                  grunt.log.writeln('add link: '.yellow + u);
+                  urls.push(u);
+                  queue[u] = 0;
+                }
+              }
+              _this.page.close();
+              return processQueue();
+            };
+          })(this));
         });
       };
       processQueue = function() {

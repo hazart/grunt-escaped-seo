@@ -4,6 +4,8 @@
 # Copyright (c) 2013 Alex Koch
 # Licensed under the MIT license.
 path = require('path')
+env = require('jsdom').env
+
 
 module.exports = (grunt) ->
 
@@ -66,34 +68,41 @@ module.exports = (grunt) ->
 			
 		processPage = () ->
 			@page.evaluate (-> document.documentElement.outerHTML), (result) ->
-				content = result
-				pattern = /[#!/]*([\w\/\-_]*)/g
-				match = pattern.exec(url)
-				destFile = if match then match[1] else ""
-				
-				pattern = /(<head[\w-="' ]*>)/gi
-				domain = if options.domain.indexOf('://') isnt -1 then options.domain else 'http://' + options.domain
-				content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain,url) + '"; </script>')
+				env(result, (errors, window) =>
+					if errors
+						console.log "ALERT>".red, console.log(errors)
+					$ = require('jquery')(window)
+					$('.nofollow').remove()
+					content = $('html')[0].outerHTML
 
-				pattern = /(<meta name="fragment" content="!">)/gi
-				content = content.replace(pattern, '')
+					pattern = /[#!/]*([\w\/\-_]*)/g
+					match = pattern.exec(url)
+					destFile = if match then match[1] else ""
+					
+					pattern = /(<head[\w-="' ]*>)/gi
+					domain = if options.domain.indexOf('://') isnt -1 then options.domain else 'http://' + options.domain
+					content = content.replace(pattern, '$1\n<script type="text/javascript">window.location.href = "' + require('url').resolve(domain,url) + '"; </script>')
 
-				content = content.replace(v, k) for k, v of options.replace
+					pattern = /(<meta name="fragment" content="!">)/gi
+					content = content.replace(pattern, '')
 
-				destFile = 'index' if destFile.length <= 1
-				pf = path.join("./", options.public, options.folder, destFile + ".html")
-				grunt.file.write(pf, content);
-				
-				pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g
-				while (match = pattern.exec(content))
-					u = match[1]
-					if queue[u] is undefined and (u isnt "#" and u isnt "/" and u isnt "#/")
-						grunt.log.writeln('add link: '.yellow + u)
-						urls.push(u)
-						queue[u] = 0
+					content = content.replace(v, k) for k, v of options.replace
 
-				@page.close()
-				processQueue()
+					destFile += 'index' if destFile.split('/')[destFile.split('/').length-1].length <= 1
+					pf = path.join("./", options.public, options.folder, destFile + ".html")
+					grunt.file.write(pf, content);
+					
+					pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g
+					while (match = pattern.exec(content))
+						u = match[1]
+						if queue[u] is undefined and (u isnt "#" and u isnt "/" and u isnt "#/")
+							grunt.log.writeln('add link: '.yellow + u)
+							urls.push(u)
+							queue[u] = 0
+
+					@page.close()
+					processQueue()
+				)
 
 		processQueue = () ->
 			for url of queue

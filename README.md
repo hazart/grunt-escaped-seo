@@ -19,7 +19,7 @@ grunt.loadNpmTasks('grunt-escaped-seo');
 
 This plugin require a local installation of PhantomJS (phantomjs.org/‎)
 
-And the npm "phantom" module `~0.5.4`
+And the npm "phantom" module `~0.6.1`
 
 ## The "escaped_seo" task
 
@@ -53,8 +53,7 @@ And if you are using pushstate.
 
     RewriteCond %{HTTP_USER_AGENT} (Googlebot|bingbot|Googlebot-Mobile|Baiduspider|Yahoo|YahooSeeker|DoCoMo|Twitterbot|TweetmemeBot|Twikle|Netseer|Daumoa|SeznamBot|Ezooms|MSNBot|Exabot|MJ12bot|sogou\sspider|YandexBot|bitlybot|ia_archiver|proximic|spbot|ChangeDetection|NaverBot|MetaJobBot|magpie-crawler|Genieo\sWeb\sfilter|Qualidator.com\sBot|Woko|Vagabondo|360Spider|ExB\sLanguage\sCrawler|AddThis.com|aiHitBot|Spinn3r|BingPreview|GrapeshotCrawler|CareerBot|ZumBot|ShopWiki|bixocrawler|uMBot|sistrix|linkdexbot|AhrefsBot|archive.org_bot|SeoCheckBot|TurnitinBot|VoilaBot|SearchmetricsBot|Butterfly|Yahoo!|Plukkie|yacybot|trendictionbot|UASlinkChecker|Blekkobot|Wotbox|YioopBot|meanpathbot|TinEye|LuminateBot|FyberSpider|Infohelfer|linkdex.com|Curious\sGeorge|Fetch-Guess|ichiro|MojeekBot|SBSearch|WebThumbnail|socialbm_bot|SemrushBot|Vedma|alexa\ssite\saudit|SEOkicks-Robot|Browsershots|BLEXBot|woriobot|AMZNKAssocBot|Speedy|oBot|HostTracker|OpenWebSpider|WBSearchBot|FacebookExternalHit) [NC]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d    
-    RewriteCond %{REQUEST_FILENAME} !\.(.*)
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^[#!/]*([\w\/\-_]*)$ /seo/$1.html [QSA,L]
 </ifModule>
 ```
@@ -69,6 +68,14 @@ grunt.initConfig({
     },
   },
 })
+```
+
+In your html code you can add a nofollow class inside some tags and these tags and its contents will be skipped
+
+```html
+<div class="nofollow">
+    This content will not be indexed
+</div>
 ```
 
 ### Options
@@ -135,6 +142,8 @@ You can define in this object some replace rules for the static html versions. E
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
+0.5.0   Add the no-follow possibility
+0.4.1   Add index on files inside folders if needed
 0.4.0   Add the protocol inside the sitemap loc
 0.3.1   Bug correction with sitemap domain
 0.3.0   Bug correction with redirection domain
