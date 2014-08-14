@@ -121,6 +121,17 @@ Default value: ``
 
 You can define in this object some replace rules for the static html versions. Each value (String or RegExp) will be replace by the corresponding key. If you use String instead of RegExp only the first occurence will be replaced.
 
+#### options.urls
+Type: `Array`
+Default Value: `['']`
+
+This contains the list of initial URLs to crawl.
+
+#### options.crawl
+Type: `Boolean`
+Default Value: `true`
+
+If this value is set to `False` only the URLs mentioned in `options.urls` will be crawled and further links won't be crawled.
 
 ### Usage Examples
 
