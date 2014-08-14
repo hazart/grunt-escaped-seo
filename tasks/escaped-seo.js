@@ -15,7 +15,8 @@
         "public": 'dist',
         folder: 'seo',
         changefreq: 'daily',
-        replace: {}
+        replace: {},
+        crawl: true
       });
       if ((options.server == null) || options.server.length === 0) {
         options.server = options.domain;
@@ -109,7 +110,7 @@
               pf = path.join("./", options["public"], options.folder, destFile + ".html");
               grunt.file.write(pf, content);
               pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g;
-              while ((match = pattern.exec(content))) {
+              while (options.crawl && (match = pattern.exec(content))) {
                 u = match[1];
                 if (queue[u] === void 0 && (u !== "#" && u !== "/" && u !== "#/")) {
                   grunt.log.writeln('add link: '.yellow + u);
