@@ -94,7 +94,7 @@ module.exports = (grunt) ->
 					grunt.file.write(pf, content);
 					
 					pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g
-					while (crawl and match = pattern.exec(content))
+					while (options.crawl and match = pattern.exec(content))
 						u = match[1]
 						if queue[u] is undefined and (u isnt "#" and u isnt "/" and u isnt "#/")
 							grunt.log.writeln('add link: '.yellow + u)
