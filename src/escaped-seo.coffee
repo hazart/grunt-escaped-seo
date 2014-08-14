@@ -19,6 +19,7 @@ module.exports = (grunt) ->
 			folder: 'seo'
 			changefreq: 'daily'
 			replace: {}
+			crawl: true
 
 		if !options.server? or options.server.length is 0
 			options.server = options.domain
@@ -93,7 +94,7 @@ module.exports = (grunt) ->
 					grunt.file.write(pf, content);
 					
 					pattern = /href=["']([#!\/]*[\w\/\-_]*)['"]/g
-					while (match = pattern.exec(content))
+					while (options.crawl and match = pattern.exec(content))
 						u = match[1]
 						if queue[u] is undefined and (u isnt "#" and u isnt "/" and u isnt "#/")
 							grunt.log.writeln('add link: '.yellow + u)
