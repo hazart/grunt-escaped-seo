@@ -38,7 +38,7 @@
     "phantom": "~0.6.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4.4",
+    "grunt": ">=0.4.0",
     "jsdom": "~0.10.5",
     "jquery": "~2.1.1",
     "phantom": "~0.6.1"
